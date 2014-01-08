@@ -1,0 +1,7 @@
+pod "DFPickerView", :path => "../DFPickerView.podspec"
+
+target "Demo" do
+end
+
+target "DemoTests" do
+end
