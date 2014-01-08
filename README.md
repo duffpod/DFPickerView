@@ -5,9 +5,54 @@
 
 ## Usage
 
-To run the example project; clone the repo, and run `pod install` from the Project directory first.
+	__block NSMutableArray *array = [NSMutableArray array];
+    
+    @autoreleasepool {
+        
+        for(int i = 1;i < 100;i++) {
+            
+            [array addObject:[NSNumber numberWithInteger:i]];
+            
+        }
+        
+    }
+    
+    self.pickerView = [[DFPickerView alloc] initWithFrame:CGRectMake(0,
+                                                                     self.view.frame.size.height,
+                                                                     self.view.frame.size.width,
+                                                                     260)];
+    self.pickerView.style = DFPickerViewStyleDark; // DFPickerViewStyleLight
+    self.pickerView.animationDuration = 0.30f; // defaults to 0.23f
+    [self.view addSubview:self.pickerView];
+    
+    [self.pickerView showInView:self.view withAnimations:nil completion:nil objects:array converter:^NSString *(id object) {
+        
+        return [[object stringValue] stringByAppendingString:@" pcs."];
+        
+    } selection:^(NSInteger selectedIndex, id selectedObject) {
+        
+        NSLog(@"Selecting object: %@ at index: %i", selectedObject, selectedIndex);
+        
+    } cancel:^{
+        
+        array = nil;
+        self.pickerView = nil;
+        
+        NSLog(@"Cancelled");
+        
+    } done:^(NSInteger selectedIndex, id selectedObject) {
+        
+        array = nil;
+        self.pickerView = nil;
+        
+        NSLog(@"Completed with object: %@ at index: %i", selectedObject, selectedIndex);
+        
+    }];
+
 
 ## Requirements
+
+iOS 7 and later.
 
 ## Installation
 
