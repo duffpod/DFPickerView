@@ -17,11 +17,7 @@
         
     }
     
-    self.pickerView = [[DFPickerView alloc] initWithFrame:CGRectMake(0,
-                                                                     self.view.frame.size.height,
-                                                                     self.view.frame.size.width,
-                                                                     260)];
-    self.pickerView.style = DFPickerViewStyleDark; // DFPickerViewStyleLight
+    self.pickerView = [[DFPickerView alloc] initWithStyle:DFPickerViewStyleDark]; // DFPickerViewStyleLight
     self.pickerView.animationDuration = 0.30f; // defaults to 0.23f
     [self.view addSubview:self.pickerView];
     
