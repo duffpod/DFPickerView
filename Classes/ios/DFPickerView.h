@@ -27,8 +27,14 @@ typedef NSString *(^ConverterBlock)(id object);
 @property (nonatomic) DFPickerViewStyle style;
 @property (nonatomic) CGFloat animationDuration;
 
-- (void)showInView:(UIView *)view
-    withAnimations:(void(^)(CGRect pickerFrame))animations
+@property (nonatomic) UIBarStyle toolBarStyle;
+@property (nonatomic, retain) UIColor *cancelTintColor;
+@property (nonatomic, retain) UIColor *doneTintColor;
+@property (nonatomic, retain) UIColor *textColor;
+
+- (id)initWithStyle:(DFPickerViewStyle)style;
+
+- (void)showWithAnimations:(void(^)(CGRect pickerFrame))animations
         completion:(void(^)(BOOL finished))completion
            objects:(NSArray *)objects
          converter:(ConverterBlock)converter
@@ -36,8 +42,7 @@ typedef NSString *(^ConverterBlock)(id object);
             cancel:(CancelBlock)cancel
               done:(DoneBlock)done;
 
-- (void)showInView:(UIView *)view
-    withAnimations:(void(^)(CGRect pickerFrame))animations
+- (void)showWithAnimations:(void(^)(CGRect pickerFrame))animations
         completion:(void(^)(BOOL finished))completion
            objects:(NSArray *)objects
          converter:(ConverterBlock)converter
@@ -46,8 +51,7 @@ typedef NSString *(^ConverterBlock)(id object);
               done:(DoneBlock)done
              index:(NSInteger)index;
 
-- (void)showInView:(UIView *)view
-    withAnimations:(void(^)(CGRect pickerFrame))animations
+- (void)showWithAnimations:(void(^)(CGRect pickerFrame))animations
         completion:(void(^)(BOOL finished))completion
            objects:(NSArray *)objects
          converter:(ConverterBlock)converter

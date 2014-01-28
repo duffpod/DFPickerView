@@ -23,7 +23,7 @@
 @property (nonatomic, copy) SelectionBlock selectionBlock;
 @property (nonatomic, copy) ConverterBlock converterBlock;
 
-@property (nonatomic, retain) UIColor *textColor;
+- (void)layout;
 
 @end
 
@@ -41,30 +41,60 @@
 
 @synthesize textColor = _textColor;
 
+@synthesize toolBarStyle = _toolBarStyle;
+@synthesize cancelTintColor = _cancelTintColor;
+@synthesize doneTintColor = _doneTintColor;
+
+- (id)initWithStyle:(DFPickerViewStyle)style {
+    
+    self = [super init];
+    
+    if(self) {
+        
+        [self setFrame:CGRectMake(0,
+                                  [UIScreen mainScreen].applicationFrame.size.height,
+                                  320,
+                                  260)];
+        
+        [self layout];
+        [self setStyle:style];
+        
+    }
+    
+    return self;
+    
+}
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         
-        self.toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 44)];
-        [self addSubview:self.toolbar];
+        [self layout];
         
-        self.cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
-        UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-        self.doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
-        
-        [self.toolbar setItems:@[self.cancelButton, space, self.doneButton]];
-        
-        CGFloat x = self.toolbar.frame.origin.x;
-        CGFloat y = self.toolbar.frame.origin.y + self.toolbar.frame.size.height;
-        CGFloat height = self.frame.size.height - y;
-        
-        self.pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(x, y, self.frame.size.width, height)];
-        self.pickerView.delegate = self;
-        [self addSubview:self.pickerView];
-
     }
     return self;
+}
+
+- (void)layout {
+    
+    self.toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 44)];
+    [self addSubview:self.toolbar];
+    
+    self.cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelButtonPressed:)];
+    UIBarButtonItem *space = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    self.doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed:)];
+    
+    [self.toolbar setItems:@[self.cancelButton, space, self.doneButton]];
+    
+    CGFloat x = self.toolbar.frame.origin.x;
+    CGFloat y = self.toolbar.frame.origin.y + self.toolbar.frame.size.height;
+    CGFloat height = self.frame.size.height - y;
+    
+    self.pickerView = [[UIPickerView alloc] initWithFrame:CGRectMake(x, y, self.frame.size.width, height)];
+    self.pickerView.delegate = self;
+    [self addSubview:self.pickerView];
+    
 }
 
 - (void)setStyle:(DFPickerViewStyle)style {
@@ -72,7 +102,7 @@
     switch (style) {
         case DFPickerViewStyleLight:
             _toolbar.barStyle = UIBarStyleDefault;
-            _pickerView.backgroundColor = [UIColor clearColor];
+            _pickerView.backgroundColor = [UIColor whiteColor];
             _cancelButton.tintColor = self.window.tintColor;//[UIColor colorWithRed:0.06f green:0.52f blue:0.98f alpha:1.00f];
             _doneButton.tintColor = self.window.tintColor;
             _textColor = [UIColor blackColor];
@@ -88,6 +118,34 @@
         default:
             break;
     }
+    
+}
+
+- (void)setToolBarStyle:(UIBarStyle)toolBarStyle {
+    
+    _toolbar.barStyle = toolBarStyle;
+    _toolBarStyle = toolBarStyle;
+    
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor {
+    
+    _pickerView.backgroundColor = backgroundColor;
+    [super setBackgroundColor:backgroundColor];
+    
+}
+
+- (void)setCancelTintColor:(UIColor *)cancelTintColor {
+    
+    _cancelButton.tintColor = cancelTintColor;
+    _cancelTintColor = cancelTintColor;
+    
+}
+
+- (void)setDoneTintColor:(UIColor *)doneTintColor {
+    
+    _doneButton.tintColor = doneTintColor;
+    _doneTintColor = doneTintColor;
     
 }
 
@@ -173,8 +231,7 @@
 #pragma mark --
 #pragma mark -- Appearence actions
 
-- (void)showInView:(UIView *)view
-    withAnimations:(void(^)(CGRect pickerFrame))animations
+- (void)showWithAnimations:(void(^)(CGRect pickerFrame))animations
         completion:(void(^)(BOOL finished))completion
            objects:(NSArray *)objects
          converter:(ConverterBlock)converter
@@ -182,8 +239,7 @@
             cancel:(CancelBlock)cancel
               done:(DoneBlock)done {
     
-    [self showInView:view
-      withAnimations:animations
+    [self showWithAnimations:animations
           completion:completion
              objects:objects
            converter:converter
@@ -195,8 +251,7 @@
     
 }
 
-- (void)showInView:(UIView *)view
-    withAnimations:(void(^)(CGRect pickerFrame))animations
+- (void)showWithAnimations:(void(^)(CGRect pickerFrame))animations
         completion:(void(^)(BOOL finished))completion
            objects:(NSArray *)objects
          converter:(ConverterBlock)converter
@@ -205,8 +260,7 @@
               done:(DoneBlock)done
              index:(NSInteger)index {
     
-    [self showInView:view
-      withAnimations:animations
+    [self showWithAnimations:animations
           completion:completion
              objects:objects
            converter:converter
@@ -218,8 +272,7 @@
     
 }
 
-- (void)showInView:(UIView *)view
-    withAnimations:(void(^)(CGRect pickerFrame))animations
+- (void)showWithAnimations:(void(^)(CGRect pickerFrame))animations
         completion:(void(^)(BOOL finished))completion
            objects:(NSArray *)objects
          converter:(ConverterBlock)converter
